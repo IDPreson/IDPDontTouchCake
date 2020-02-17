@@ -11,7 +11,7 @@ public class TeamInfo {
     public ArrayList<PlayerInfo> TeamPlayers=new ArrayList<>();
     public HashMap<String,Boolean> PropMap=new HashMap<>();
     public Location SpawnLocation,CakeLocation,TeamScale_1,TeamScale_2;
-    public boolean isDead=false;
+    public boolean isDead=false,isCakebreak=false;
     public TeamInfo(String TeamName){
         this.TeamName=TeamName;
         init();
@@ -69,7 +69,7 @@ public class TeamInfo {
     public void addPlayerDeath(Player player){
         for(int i=0;i<TeamPlayers.size();i++){
             if(TeamPlayers.get(i).player.equals(player)){
-                TeamPlayers.get(i).Death=TeamPlayers.get(i).Death+1;
+                TeamPlayers.get(i).Deaths=TeamPlayers.get(i).Deaths+1;
                 break;
             }
         }
@@ -82,7 +82,7 @@ public class TeamInfo {
         }
         return 0;
     }
-    public boolean getPlayerDead(Player player){
+    public boolean getPlayerIsDead(Player player){
         for(int i=0;i<TeamPlayers.size();i++){
             if(TeamPlayers.get(i).player.equals(player)){
                 return TeamPlayers.get(i).isDead;
@@ -96,6 +96,11 @@ public class TeamInfo {
                 TeamPlayers.get(i).Kills=num;
                 break;
             }
+        }
+    }
+    public void sendMessageToTeam(String message){
+        for(int i=0;i<TeamPlayers.size();i++){
+            TeamPlayers.get(i).player.sendMessage(message);
         }
     }
 }

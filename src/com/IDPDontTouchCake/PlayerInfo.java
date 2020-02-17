@@ -4,9 +4,9 @@ import cn.nukkit.Player;
 
 public class PlayerInfo {
     public Player player;
-    public String TeamName,beKilledName;
-    public int Kills,Death,reSpawnTime=3;
-    public boolean isDead=false;
+    public String TeamName,KilledName;
+    public int Kills,Deaths,reSpawnTime=3,breakcake=0;
+    public boolean isDead=false,canMove=true;
     public PlayerInfo(Player player,String TeamName){
         this.player=player;
         this.TeamName=TeamName;
