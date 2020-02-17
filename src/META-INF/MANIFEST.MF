@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: com.IDPDontTouchCake.cake
+Class-Path: mysql-connector.jar nukkit.jar
+

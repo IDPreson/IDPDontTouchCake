@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="IDPDontTouchCake:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/IDPDontTouchCake_jar</output-path>
+    <root id="root">
+      <element id="archive" name="IDPDontTouchCake.jar">
+        <element id="module-output" name="IDPDontTouchCake" />
+        <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+      </element>
+    </root>
+  </artifact>
+</component>

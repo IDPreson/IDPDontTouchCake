@@ -1,0 +1,38 @@
+name: IDPDontTouchCake
+main: com.IDPDontTouchCake.cake
+version: "2.0.0"
+api: ["1.0.0"]
+
+load: STARTUP
+
+author: IDPreson
+description: IDP别碰我的蛋糕插件
+
+commands:
+  lobbyLocation:
+    penmision: op
+    description: 设置等待大厅位置
+  redTeamLocation:
+    penmision: op
+    description: 设置红队出生位置
+  blueTeamLocation:
+    penmision: op
+    description: 设置蓝队出生位置
+  greenTeamLocation:
+    penmision: op
+    description: 设置绿队出生位置
+  yellowTeamLocation:
+    penmision: op
+    description: 设置黄队出生位置
+  setRedCake:
+    penmision: op
+    description: 设置红队蛋糕位置
+  setBlueCake:
+    penmision: op
+    description: 设置蓝队蛋糕位置
+  setGreenCake:
+    penmision: op
+    description: 设置绿队蛋糕位置
+  setYellowCake:
+    penmision: op
+    description: 设置黄队蛋糕位置
