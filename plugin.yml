@@ -36,3 +36,27 @@ commands:
   setYellowCake:
     penmision: op
     description: 设置黄队蛋糕位置
+  setRedScale1:
+    penmision: op
+    description: 设置红队范围
+  setBlueScale1:
+    penmision: op
+    description: 设置蓝队范围
+  setGreenScale1:
+    penmision: op
+    description: 设置绿队范围
+  setYellowScale1:
+    penmision: op
+    description: 设置黄队范围
+  setRedScale2:
+    penmision: op
+    description: 设置红队范围
+  setBlueScale2:
+    penmision: op
+    description: 设置蓝队范围
+  setGreenScale2:
+    penmision: op
+    description: 设置绿队范围
+  setYellowScale2:
+    penmision: op
+    description: 设置黄队范围
