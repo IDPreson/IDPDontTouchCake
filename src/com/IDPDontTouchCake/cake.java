@@ -1,6 +1,7 @@
 package com.IDPDontTouchCake;
 
 import cn.nukkit.event.Listener;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 
@@ -8,6 +9,8 @@ import java.io.File;
 
 public class cake extends PluginBase implements Listener {
     public static Config config;
+    public static FormWindowSimple formWindowSimple;
+    ShopWindow shopWindow=new ShopWindow();
     @Override
     public void onLoad() {
         this.getServer().getLogger().info("IDP别碰我的蛋糕装载中");
@@ -55,6 +58,18 @@ public class cake extends PluginBase implements Listener {
             config.set("黄队出生点X",0);
             config.set("黄队出生点Y",0);
             config.set("黄队出生点Z",0);
+            config.set("红队蛋糕X",0);
+            config.set("红队蛋糕Y",0);
+            config.set("红队蛋糕Z",0);
+            config.set("蓝队蛋糕X",0);
+            config.set("蓝队蛋糕Y",0);
+            config.set("蓝队蛋糕Z",0);
+            config.set("绿队蛋糕X",0);
+            config.set("绿队蛋糕Y",0);
+            config.set("绿队蛋糕Z",0);
+            config.set("黄队蛋糕X",0);
+            config.set("黄队蛋糕Y",0);
+            config.set("黄队蛋糕Z",0);
             config.set("是否设置完毕",-1);
             config.save();
         }
