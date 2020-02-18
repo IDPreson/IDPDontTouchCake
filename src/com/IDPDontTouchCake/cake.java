@@ -29,7 +29,9 @@ public class cake extends PluginBase implements Listener {
     public static Config config;
     public static HashMap<String,TeamInfo> Teams=new HashMap<>();
     public static TouchCakeSql touchCakeSql=new TouchCakeSql();
-    public static int CountDown=10;
+    public static int CountDown=20,DeathFight=300,reloadtime=10;
+    public static String victoryTeamName="",setment="";
+    String cakeSet="";
     ShopWindow shopWindow=new ShopWindow();
     PlayerBugProp playerBugProp=new PlayerBugProp();
     PlayerEvent playerEvent=new PlayerEvent();
@@ -41,6 +43,7 @@ public class cake extends PluginBase implements Listener {
     public void onEnable() {
         this.getServer().getLogger().info("IDP别碰我的蛋糕启动中");
         this.getServer().getPluginManager().registerEvents(this,this);
+        this.getServer().getScheduler().scheduleRepeatingTask(new TimeTask(),20);
         String[] str=new String[0];
         main(str);
         initConfig();
@@ -93,87 +96,19 @@ public class cake extends PluginBase implements Listener {
             return true;
         }
         if(command.getName().equalsIgnoreCase("setRedCake")){
-            config.set("红队蛋糕X",player.x);
-            config.set("红队蛋糕Y",player.y);
-            config.set("红队蛋糕Z",player.z);
-            config.save();
+            cakeSet="红队蛋糕";
             return true;
         }
         if(command.getName().equalsIgnoreCase("setBlueCake")){
-            config.set("蓝队蛋糕X",player.x);
-            config.set("蓝队蛋糕Y",player.y);
-            config.set("蓝队蛋糕Z",player.z);
-            config.save();
+            cakeSet="蓝队蛋糕";
             return true;
         }
         if(command.getName().equalsIgnoreCase("setGreenCake")){
-            config.set("绿队蛋糕X",player.x);
-            config.set("绿队蛋糕Y",player.y);
-            config.set("绿队蛋糕Z",player.z);
-            config.save();
+            cakeSet="绿队蛋糕";
             return true;
         }
         if(command.getName().equalsIgnoreCase("setYellowCake")){
-            config.set("黄队蛋糕X",player.x);
-            config.set("黄队蛋糕Y",player.y);
-            config.set("黄队蛋糕Z",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setRedScale1")){
-            config.set("红队范围X1",player.x);
-            config.set("红队范围Y1",player.y);
-            config.set("红队范围Z1",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setBlueScale1")){
-            config.set("蓝队范围X1",player.x);
-            config.set("蓝队范围Y1",player.y);
-            config.set("蓝队范围Z1",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setGreenScale1")){
-            config.set("绿队范围X1",player.x);
-            config.set("绿队范围Y1",player.y);
-            config.set("绿队范围Z1",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setYellowScale1")){
-            config.set("黄队范围X1",player.x);
-            config.set("黄队范围Y1",player.y);
-            config.set("黄队范围Z1",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setRedScale2")){
-            config.set("红队范围X2",player.x);
-            config.set("红队范围Y2",player.y);
-            config.set("红队范围Z2",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setBlueScale2")){
-            config.set("蓝队范围X2",player.x);
-            config.set("蓝队范围Y2",player.y);
-            config.set("蓝队范围Z2",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setGreenScale2")){
-            config.set("绿队范围X2",player.x);
-            config.set("绿队范围Y2",player.y);
-            config.set("绿队范围Z2",player.z);
-            config.save();
-            return true;
-        }
-        if(command.getName().equalsIgnoreCase("setYellowScale2")){
-            config.set("黄队范围X2",player.x);
-            config.set("黄队范围Y2",player.y);
-            config.set("黄队范围Z2",player.z);
-            config.save();
+            cakeSet="黄队蛋糕";
             return true;
         }
         return false;
@@ -181,35 +116,47 @@ public class cake extends PluginBase implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent p){
         p.getPlayer().setFoodEnabled(false);
+        try {
+            p.getPlayer().setNameTag("⭐"+touchCakeSql.getPlayerLevel(p.getPlayer().getName())+"|"+touchCakeSql.getPLayerPrefix(p.getPlayer().getName())+"|"+p.getPlayer().getName()+"§8");
+            p.getPlayer().setDisplayName("⭐"+touchCakeSql.getPlayerLevel(p.getPlayer().getName())+"|"+p.getPlayer().getName()+"§8");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ItemApple itemApple=new ItemApple();
+        itemApple.setCustomName("返回大厅");
+        p.getPlayer().getInventory().addItem(itemApple);
         if(config.getInt("是否设置完毕")==0){
             if(config.getString("状态").equals("等待")){
-                if(config.getInt("当前人数")+1<=config.getInt("最大游戏人数")){
-                    config.set("当前人数",config.getInt("当前人数")+1);
+                if(config.getInt("当前游戏人数")+1<=config.getInt("最大游戏人数")){
+                    config.set("当前游戏人数",this.getServer().getOnlinePlayers().size());
                 }else{
                     p.getPlayer().sendMessage("§l**[IDP]-游戏玩家数达最大，您转为观战模式！");
                     p.getPlayer().setGamemode(3);
-                    ItemApple itemApple=new ItemApple();
-                    itemApple.setCustomName("返回大厅");
-                    p.getPlayer().getInventory().addItem(itemApple);
                 }
-                if(config.getInt("当前人数")>=config.getInt("最低游戏人数")){
-                    config.set("状态","开始");
+                if(config.getInt("当前游戏人数")>=config.getInt("最低游戏人数")){
+                    config.set("状态","倒计时");
                 }
             }
         }
         config.save();
     }
     @EventHandler
+    public void onPlayerDropItemEvent(PlayerDropItemEvent p){
+        p.setCancelled(true);
+    }
+    @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent p){
         if(config.getInt("是否设置完毕")!=0){
             return;
         }
-        if(config.getString("状态").equals("等待")){
-            config.set("当前人数",config.getInt("当前人数")-1);
-        }
-        if(config.getInt("当前人数")<config.getInt("最低游戏人数") && config.getString("状态").equals("倒计时")){
-            config.set("状态","等待");
-            this.getServer().broadcastMessage("§l**[IDP]-玩家数小于最低游戏人数，停止倒计时！");
+        config.set("当前游戏人数",this.getServer().getOnlinePlayers().size());
+        config.save();
+        if(config.getString("状态").equals("倒计时")){
+            if(config.getInt("当前游戏人数")<config.getInt("最低游戏人数")){
+                CountDown=20;
+                config.set("状态","等待");
+                this.getServer().broadcastMessage("§l**[IDP]-玩家数小于最低游戏人数，停止倒计时！");
+            }
         }
         if(config.getString("状态").equals("开始")){
             playerEvent.PlayerQuit(p.getPlayer(),Teams);
@@ -218,14 +165,70 @@ public class cake extends PluginBase implements Listener {
     }
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent p){
+        p.setKeepInventory(true);
+        if(config.getInt("是否设置完毕")!=0 || !config.getString("状态").equals("开始")){
+            return;
+        }
         playerEvent.PlayerDeath(p.getEntity(),Teams);
     }
     @EventHandler
     public void onPlayerRespawnEvent(PlayerRespawnEvent p){
-        playerEvent.PlayerReSpawn(p.getPlayer(),Teams);
+        if(config.getInt("是否设置完毕")!=0 || !config.getString("状态").equals("开始")){
+            return;
+        }
+        String TeamName_1 = "";
+        if (p.getPlayer().getNameTag().contains("黄队")) {
+            TeamName_1 = "黄队";
+        }
+        if (p.getPlayer().getNameTag().contains("红队")) {
+            TeamName_1 = "红队";
+        }
+        if (p.getPlayer().getNameTag().contains("绿队")) {
+            TeamName_1 = "绿队";
+        }
+        if (p.getPlayer().getNameTag().contains("蓝队")) {
+            TeamName_1 = "蓝队";
+        }
+        p.getPlayer().setGamemode(3);
+        p.getPlayer().setGamemode(0);
+        for (int i = 0; i < Teams.get(TeamName_1).TeamPlayers.size(); i++) {
+            if (Teams.get(TeamName_1).TeamPlayers.get(i).player.equals(p.getPlayer())) {
+                PlayerInfo playerInfo=Teams.get(TeamName_1).TeamPlayers.get(i);
+                if (Teams.get(TeamName_1).isCakebreak) {
+                    try {
+                        if(cake.touchCakeSql.isPlayerExist(playerInfo.player.getName())){
+                            cake.touchCakeSql.Settlement(playerInfo.player.getName(),playerInfo.Kills,playerInfo.Deaths,0,1,playerInfo.breakcake,playerInfo.player,playerInfo.getVipMultiple());
+                        }else{
+                            cake.touchCakeSql.createPlayerInfo(playerInfo.player.getName());
+                            cake.touchCakeSql.Settlement(playerInfo.player.getName(),playerInfo.Kills,playerInfo.Deaths,0,1,playerInfo.breakcake,playerInfo.player,playerInfo.getVipMultiple());
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    Teams.get(TeamName_1).TeamPlayers.remove(i);
+                    p.getPlayer().getInventory().clearAll();
+                    p.getPlayer().sendTitle("你的蛋糕已被破坏\n你无法重生了！");
+                    p.getPlayer().setGamemode(3);
+                    ItemApple itemApple=new ItemApple();
+                    itemApple.setCustomName("返回大厅");
+                    p.getPlayer().getInventory().addItem(itemApple);
+                    p.getPlayer().removeAllEffects();
+                    break;
+                } else {
+                    p.getPlayer().sendTitle("3秒后可移动!");
+                    Teams.get(TeamName_1).TeamPlayers.get(i).KilledName="";
+                    Teams.get(TeamName_1).TeamPlayers.get(i).KilledPlayer=null;
+                    p.setRespawnPosition(Teams.get(TeamName_1).SpawnLocation);
+                    break;
+                }
+            }
+        }
     }
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent p){
+        if(config.getInt("是否设置完毕")!=0 || !config.getString("状态").equals("开始")){
+            return;
+        }
         String TeamName="";
         if(p.getPlayer().getNameTag().contains("黄队")){
             TeamName="黄队";
@@ -243,9 +246,12 @@ public class cake extends PluginBase implements Listener {
         if(!TeamName.equals("")){
             for(int i=0;i<Teams.get(TeamName).TeamPlayers.size();i++){
                 if(Teams.get(TeamName).TeamPlayers.get(i).player.equals(p.getPlayer())){
-                    if(Teams.get(TeamName).TeamPlayers.get(i).canMove=false){
-                        p.getPlayer().sendActionBar("§l§c你还未重生结束！");
+                    if(!Teams.get(TeamName).TeamPlayers.get(i).canMove){
+                        p.getPlayer().sendTitle("§l§c你还未重生结束！");
                         p.setCancelled(true);
+                        Effect effect=new Effect(Effect.SPEED,"速度",0,0,255).setAmplifier(2);
+                        effect.setDuration(999999);
+                        p.getPlayer().addEffect(effect);
                         break;
                     }
                 }
@@ -254,6 +260,10 @@ public class cake extends PluginBase implements Listener {
     }
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent e){
+        if(config.getInt("是否设置完毕")!=0 || !config.getString("状态").equals("开始")){
+            e.setCancelled(true);
+            return;
+        }
         Player beAttackPlayer=(Player) e.getEntity();
         Player AttackPlayer=(Player) e.getDamager();
         String TeamName_1="";
@@ -283,11 +293,13 @@ public class cake extends PluginBase implements Listener {
             TeamName_2="蓝队";
         }
         if(TeamName_1.equals(TeamName_2)){
+            e.setCancelled(true);
             return;
         }
         for(int i=0;i<Teams.get(TeamName_1).TeamPlayers.size();i++){
             if(Teams.get(TeamName_1).TeamPlayers.get(i).player.equals(beAttackPlayer)){
                 Teams.get(TeamName_1).TeamPlayers.get(i).KilledName=AttackPlayer.getNameTag();
+                Teams.get(TeamName_1).TeamPlayers.get(i).KilledPlayer=AttackPlayer;
                 break;
             }
         }
@@ -300,6 +312,13 @@ public class cake extends PluginBase implements Listener {
         if (p.getItem().getCustomName().equals("返回大厅")) {
             InetSocketAddress inetSocketAddress=new InetSocketAddress(config.getString("大厅服IP"),config.getInt("大厅服端口"));
             p.getPlayer().transfer(inetSocketAddress);
+        }
+        if(!cakeSet.equals("")){
+            config.set(cakeSet+"X",p.getBlock().x);
+            config.set(cakeSet+"Y",p.getBlock().y);
+            config.set(cakeSet+"Z",p.getBlock().z);
+            config.save();
+            cakeSet="";
         }
     }
     @EventHandler
@@ -316,12 +335,29 @@ public class cake extends PluginBase implements Listener {
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent b){
         if(b.getBlock() instanceof BlockCake){
-            b.setDrops(null);
+            String TeamName_1 = "";
+            if (b.getPlayer().getNameTag().contains("黄队")) {
+                TeamName_1 = "黄队";
+            }
+            if (b.getPlayer().getNameTag().contains("红队")) {
+                TeamName_1 = "红队";
+            }
+            if (b.getPlayer().getNameTag().contains("绿队")) {
+                TeamName_1 = "绿队";
+            }
+            if (b.getPlayer().getNameTag().contains("蓝队")) {
+                TeamName_1 = "蓝队";
+            }
+            if(Teams.get(TeamName_1).CakeLocation.equals(b.getBlock().getLocation())){
+                b.getPlayer().sendMessage("你不能破坏你自己的蛋糕");
+                b.setCancelled(true);
+                return;
+            }
             for(TeamInfo teamInfo:Teams.values()){
-                if(teamInfo.CakeLocation==b.getBlock().getLocation()){
+                if(teamInfo.CakeLocation.equals(b.getBlock().getLocation())){
                     teamInfo.isCakebreak=true;
                     for(PlayerInfo playerInfo:teamInfo.TeamPlayers){
-                        playerInfo.player.sendActionBar("§l§c你的蛋糕被摧毁了\n你死亡后无法重生！");
+                        playerInfo.player.sendTitle("§l§c你的蛋糕被摧毁了\n你死亡后无法重生！");
                     }
                     this.getServer().broadcastMessage("§l**[IDP]-"+b.getPlayer().getName()+"摧毁了"+teamInfo.TeamName+"的蛋糕！");
                     break;
@@ -364,6 +400,10 @@ public class cake extends PluginBase implements Listener {
     @EventHandler
     public void onLevelLoadEvent(LevelLoadEvent l){
         l.getLevel().gameRules.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,true);
+        this.getServer().getLevelByName("Game").setBlock(Teams.get("红队").CakeLocation,new BlockCake());
+        this.getServer().getLevelByName("Game").setBlock(Teams.get("蓝队").CakeLocation,new BlockCake());
+        this.getServer().getLevelByName("Game").setBlock(Teams.get("绿队").CakeLocation,new BlockCake());
+        this.getServer().getLevelByName("Game").setBlock(Teams.get("黄队").CakeLocation,new BlockCake());
     }
     public static void main(String[] args) {
         try {
@@ -383,7 +423,6 @@ public class cake extends PluginBase implements Listener {
             config.set("等待大厅X",0);
             config.set("等待大厅Y",0);
             config.set("等待大厅Z",0);
-            config.set("等待时间",0);
             config.set("状态","关闭");
             config.set("红队出生点X",0);
             config.set("红队出生点Y",0);
@@ -409,30 +448,6 @@ public class cake extends PluginBase implements Listener {
             config.set("黄队蛋糕X",0);
             config.set("黄队蛋糕Y",0);
             config.set("黄队蛋糕Z",0);
-            config.set("红队范围X1",0);
-            config.set("红队范围Y1",0);
-            config.set("红队范围Z1",0);
-            config.set("蓝队范围X1",0);
-            config.set("蓝队范围Y1",0);
-            config.set("蓝队范围Z1",0);
-            config.set("绿队范围X1",0);
-            config.set("绿队范围Y1",0);
-            config.set("绿队范围Z1",0);
-            config.set("黄队范围X1",0);
-            config.set("黄队范围Y1",0);
-            config.set("黄队范围Z1",0);
-            config.set("红队范围X2",0);
-            config.set("红队范围Y2",0);
-            config.set("红队范围Z2",0);
-            config.set("蓝队范围X2",0);
-            config.set("蓝队范围Y2",0);
-            config.set("蓝队范围Z2",0);
-            config.set("绿队范围X2",0);
-            config.set("绿队范围Y2",0);
-            config.set("绿队范围Z2",0);
-            config.set("黄队范围X2",0);
-            config.set("黄队范围Y2",0);
-            config.set("黄队范围Z2",0);
             config.set("是否设置完毕",-1);
             config.set("大厅服IP","111.229.24.142");
             config.set("大厅服端口",52113);
@@ -454,13 +469,14 @@ public class cake extends PluginBase implements Listener {
             }
             config=new Config(file,2);
             config.set("状态","等待");
+            config.set("当前游戏人数",0);
             if(config.getInt("是否设置完毕")==0){
                 TeamInfo teamInfo=new TeamInfo("红队");
                 Teams.put("红队",teamInfo);
                 teamInfo=new TeamInfo("蓝队");
                 Teams.put("蓝队",teamInfo);
                 teamInfo=new TeamInfo("绿队");
-                Teams.put("黄队",teamInfo);
+                Teams.put("绿队",teamInfo);
                 teamInfo=new TeamInfo("黄队");
                 Teams.put("黄队",teamInfo);
             }

@@ -1,6 +1,7 @@
 package com.IDPDontTouchCake;
 
 import cn.nukkit.Player;
+import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemPotion;
 
 public class PlayerBugProp {
@@ -48,28 +49,31 @@ public class PlayerBugProp {
                     }
                 }
                 break;
-            case "隐身药水":
+            case "隐身药水-6杀敌数":
                 if(kills-6>=0){
                     p.sendMessage("§l§e**[IDP]-购买隐身药水成功！");
-                    ItemPotion invisible=(ItemPotion)ItemPotion.get(ItemPotion.INVISIBLE);
+                    Item invisible=ItemPotion.get(373,7);
+                    cake.Teams.get(TeamName).setPlayerKills(p,kills-6);
                     p.getPlayer().getInventory().addItem(invisible);
                 }else{
                     p.sendMessage("§l§e**[IDP]-您的杀敌数不足，购买失败！");
                 }
                 break;
-            case "剧毒药水":
+            case "剧毒药水-5杀敌数":
                 if(kills-5>=0){
                     p.sendMessage("§l§e**[IDP]-购买剧毒药水成功！");
-                    ItemPotion itemPotion=(ItemPotion)ItemPotion.get(ItemPotion.SPLASH_POTION);
+                    Item itemPotion=ItemPotion.get(438,25);
+                    cake.Teams.get(TeamName).setPlayerKills(p,kills-5);
                     p.getPlayer().getInventory().addItem(itemPotion);
                 }else{
                     p.sendMessage("§l§e**[IDP]-您的杀敌数不足，购买失败！");
                 }
                 break;
-            case "跳跃药水":
+            case "跳跃药水-3杀敌数":
                 if(kills-3>=0){
                     p.sendMessage("§l§e**[IDP]-购买跳跃药水成功！");
-                    ItemPotion itemPotion=(ItemPotion)ItemPotion.get(373,9);
+                    Item itemPotion=ItemPotion.get(373,9);
+                    cake.Teams.get(TeamName).setPlayerKills(p,kills-3);
                     p.getPlayer().getInventory().addItem(itemPotion);
                 }else{
                     p.sendMessage("§l§e**[IDP]-您的杀敌数不足，购买失败！");
