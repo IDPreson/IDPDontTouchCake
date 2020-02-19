@@ -1,6 +1,8 @@
 package com.IDPDontTouchCake;
 
 import cn.nukkit.Player;
+import cn.nukkit.level.Sound;
+import cn.nukkit.network.protocol.PlaySoundPacket;
 
 import java.sql.SQLException;
 
@@ -38,5 +40,12 @@ public class PlayerInfo {
                 return 2.0;
         }
         return 1;
+    }
+    public void sendMusic(Sound sound){
+        PlaySoundPacket playSoundPacket=new PlaySoundPacket();
+        playSoundPacket.name=sound.name();
+        playSoundPacket.pitch=1;
+        playSoundPacket.volume=100;
+        player.dataPacket(playSoundPacket);
     }
 }

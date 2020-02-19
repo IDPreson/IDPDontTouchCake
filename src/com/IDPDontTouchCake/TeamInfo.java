@@ -2,6 +2,8 @@ package com.IDPDontTouchCake;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
+import cn.nukkit.network.protocol.PlaySoundPacket;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +60,15 @@ public class TeamInfo {
     public void sendMessageToTeam(String message){
         for(int i=0;i<TeamPlayers.size();i++){
             TeamPlayers.get(i).player.sendMessage(message);
+        }
+    }
+    public void sendMusicToTeam(Sound sound){
+        for(PlayerInfo playerInfo:TeamPlayers){
+            PlaySoundPacket playSoundPacket=new PlaySoundPacket();
+            playSoundPacket.name=sound.name();
+            playSoundPacket.pitch=1;
+            playSoundPacket.volume=100;
+            playerInfo.player.dataPacket(playSoundPacket);
         }
     }
 }

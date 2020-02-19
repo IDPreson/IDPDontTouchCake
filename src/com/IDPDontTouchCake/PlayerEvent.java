@@ -2,6 +2,7 @@ package com.IDPDontTouchCake;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.level.Sound;
 import cn.nukkit.potion.Effect;
 
 import java.util.HashMap;
@@ -84,6 +85,7 @@ public class PlayerEvent {
                             if (Teams.get(TeamName).TeamPlayers.get(o).player.equals(Teams.get(TeamName_1).TeamPlayers.get(i).KilledPlayer)) {
                                 Teams.get(TeamName).TeamPlayers.get(o).Kills=Teams.get(TeamName).TeamPlayers.get(o).Kills+1;
                                 Teams.get(TeamName).TeamPlayers.get(o).player.sendMessage("击杀数+1");
+                                Teams.get(TeamName).TeamPlayers.get(o).sendMusic(Sound.RANDOM_LEVELUP);
                                 break;
                             }
                         }
